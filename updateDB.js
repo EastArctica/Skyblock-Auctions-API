@@ -30,28 +30,26 @@ async function startAHLoop() {
     async function getFullAH() {
         try {
             let ah = []
-            let completedPages = 0
+            let totalCompletedPages = 0
             let firstPage = await getAuctionPage(0)
-            for (let i = 1; i <= firstPage.totalPages; i++) {
-                getAuctionPage(i).then((page) => {
-                    if (completedPages !== firstPage.totalPages - 1) {
-                        completedPages++
-                    }
+            for (let currentPage = 0; currentPage < firstPage.totalPages; currentPage++) {
+                getAuctionPage(currentPage).then((page) => {
                     if (page.success) {
-                        for (auction of page.auctions) {
-                            ah.push(auction)
-                            if (completedPages == firstPage.totalPages - 1) {
-                                completedPages++
-                            }
-                        }
-                    } else if (completedPages == firstPage.totalPages - 1) {
-                        completedPages++
+                        // This page should exists and have valid auctions on it
+                        console.log(`Page ${currentPage} pushing ${page.auctions.length} into the ah array`)
+                        ah.push(...page.auctions) // Each item get's pushed instead of the array of auctions
+                    } else {
+                        // The page failed to load for some reason, Hypixel likely updated the ah while we were downloading.
+                        // TODO: Log this somewhere, possibly a discord webhook?
                     }
+                    totalCompletedPages++
                 })
             }
-            // Wait for the whole ah to download
-            while (completedPages !== firstPage.totalPages)
+            // While we're havn't loaded all the pages wait.
+            while (totalCompletedPages !== firstPage.totalPages)
                 await new Promise((resolve) => setTimeout(resolve, 10))
+            // All pages have been downloaded
+            console.log(`Loaded ${totalCompletedPages} pages, with ${ah.length} auctions, totalPages ${firstPage.totalPages}`)
             return ah
         } catch (e) {
             console.log('Failed to update auctions', e)

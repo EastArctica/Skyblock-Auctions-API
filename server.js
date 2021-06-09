@@ -1,5 +1,9 @@
+// newrelic config
+require('newrelic')
+
 const MongoClient = require('mongodb').MongoClient
 const fs = require('fs')
+const fetch = require('node-fetch')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -20,9 +24,9 @@ app.get('/auctions/', async (req, res) => {
     if (!db || !db.isConnected()) await connectToDB()
     let clientIP = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress
     res.setHeader('Content-Type', 'application/json')
-    query = req.query.query || '{}'
-    page = req.query.page || 0
-    sort = req.query.sort || '{}'
+    query = req.query.query || req.query.q || '{}'
+    page = req.query.page || req.query.p || 0
+    sort = req.query.sort || req.query.s || '{}'
 
     try {
         query = JSON.parse(query)
