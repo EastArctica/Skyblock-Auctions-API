@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
 const fs = require('fs')
-const fetch = require('node-fetch')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -73,11 +72,6 @@ async function connectToDB() {
     console.log('Successful connection to database')
     return db
 }
-
-setInterval(() => {
-    rateLimitObj = {}
-    lastResetRateLimit = Date.now()
-}, 60000)
 
 async function log(IP, path, other) {
     if (!(await fs.exists('logs/', () => { }))) await fs.mkdir('logs', () => { })

@@ -3,10 +3,23 @@ const fetch = require('node-fetch')
 const config = require('./config.json')
 // Setup AH db loop
 async function startAHLoop() {
+    // TODO: Change this function name it's to long
+    async function getSecondsUntilApiUpdate() {
+        let req = await fetch(`https://api.hypixel.net/skyblock/auctions?page=0&key=${config.hypixelApiKey}`)
+        // * We use cloudflare age because hypixel is dumb and doesn't align themselves to it so we have to
+        let age = Number(req.headers.get('age'))
+        
+        // when age == null, the api was just updated
+        if (age == null)
+            return 0
+        
+        let maxAge = Number(req.headers.get('cache-control').split('s-maxage=')[1]) || 60
+        // cloudflare doesn't give us an exact time left in ms, so we could either spam requests for 2.5 second, or just add a second to the seconds left
+        return maxAge - age + 2.5
+    }
+
     async function getAuctionPage(page = 0) {
-        return fetch(
-            `https://api.hypixel.net/skyblock/auctions?page=${page}&key=${config.hypixelApiKey}`
-        ).then((res) => {
+        return fetch(`https://api.hypixel.net/skyblock/auctions?page=${page}&key=${config.hypixelApiKey}`).then((res) => {
             if (!res.ok) {
                 return res.statusText
             }
@@ -53,6 +66,7 @@ async function startAHLoop() {
 
         let ah = await getFullAH()
         let timeTaken = Date.now() - startTime
+
         if (typeof ah.ok == 'undefined') {
             auctionCollection.drop()
             auctionCollection.insertMany(ah)
@@ -60,10 +74,10 @@ async function startAHLoop() {
         } else {
             console.log(`Auction update failed in ${timeTaken} ms ${Date().toLocaleString()}`)
         }
+        
         // This essentially is the delay instead of every 60000 ms
-        setTimeout(main, 60000 - timeTaken)
+        setTimeout(main, await getSecondsUntilApiUpdate() * 1000)
     }
-    await new Promise((resolve) => setTimeout(resolve, 60000 - timeTaken))
     main()
 }
 
