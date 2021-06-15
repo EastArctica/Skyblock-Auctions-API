@@ -7,14 +7,14 @@ app.use(cors())
 const config = require('../config.json')
 const startDate = new Date()
 const logFile = `logs/${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDay()}_${startDate.getHours()}:${startDate.getMinutes()}.${startDate.getSeconds()}.log` // logs/2021-5-5_12:32.7.log
-
+const redocFile = fs.readFileSync('static/redoc-static.html', 'utf-8')
 let lastUpdated = 0 // This should probs be different but 0 seems to be the best way for now... better than startDate at least?
 let totalAuctions = 0
 let currentDB = 'main'
 let db
 let skyblock
 app.get('/', (req, res) => {
-    res.send('Hypixel Skyblock custom API. Join the discord <a href="https://discord.gg/TXEtRa4yve">here</a>')
+    res.send(redocFile)
     //let clientIP = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress
     //console.log(`Request to / inbound from ${clientIP}`)
 })
