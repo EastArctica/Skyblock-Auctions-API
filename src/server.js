@@ -9,6 +9,7 @@ const startDate = new Date()
 const logFile = `logs/${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDay()}_${startDate.getHours()}:${startDate.getMinutes()}.${startDate.getSeconds()}.log` // logs/2021-5-5_12:32.7.log
 
 let lastUpdated = 0 // This should probs be different but 0 seems to be the best way for now... better than startDate at least?
+let totalAuctions = 0
 let currentDB = 'main'
 let db
 let skyblock
@@ -43,9 +44,10 @@ app.get('/auctions/', async (req, res) => {
     })
 })
 
-app.get('/auctions/swapDB/:db', (req, res) => {
+app.get('/auctions/swapDB/:db', async (req, res) => {
     currentDB = req.params.db
     lastUpdated = Date.now()
+    totalAuctions = await skyblock.collection(req.params.db == 'main' ? 'auctionsMain' : 'auctionsCache').countDocuments()
     res.send('')
 })
 
@@ -54,6 +56,14 @@ app.get('/auctions/lastUpdated/', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     res.json({
         lastUpdated: lastUpdated
+    })
+})
+
+app.get('/skyblock/auctions/info', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.json({
+        lastUpdated: lastUpdated,
+        totalAuctions: totalAuctions
     })
 })
 
