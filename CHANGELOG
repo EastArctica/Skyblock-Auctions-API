@@ -1,8 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Who.The.Hell.Knows] - 2021-08-23
+### Updated
+- This project no longer adheres to anything.
+- I am not ok.
+- Who knows what I added.
+- I sure don't.
+- I think I made things better?
+- I think I added prod, staging, and dev.
+- Uhm... I don't really know to be honest with you.
+- Added nbt decompression.
+- Oh also fuck openapi.
 
 ## [1.4.0] - 2021-06-09
 ### Added

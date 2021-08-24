@@ -1,8 +1,0 @@
-{
-	"mongoSRV_Read": "mongodb://skyblockAPIReadOnly:skyblockAPIReadOnly@localhost:27017/",
-        "mongoSRV_ReadWrite": "mongodb://admin:admin@localhost:27017/",
-	"port": 3000,
-	"pageSize": 100,
-	"hypixelApiKey": "2b012f3a-2aa4-4833-9b01-6f1664a5c70b",
-	"rateLimit": 20
-}
