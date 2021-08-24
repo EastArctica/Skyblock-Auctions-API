@@ -13,7 +13,11 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "json5": "^2.2.0",
     "mongodb": "^3.6.9",
-    "node-fetch": "^2.6.1"
+    "morgan": "^1.10.0",
+    "nbt": "^0.8.1",
+    "node-fetch": "^2.6.1",
+    "prismarine-nbt": "^1.6.0"
   }
 }
