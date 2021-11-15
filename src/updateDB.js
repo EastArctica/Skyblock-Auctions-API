@@ -43,6 +43,8 @@ async function sleep(ms) {
 
 async function getSecondsUntilApiUpdate() {
     let req = await fetch(`https://api.hypixel.net/skyblock/auctions?page=0&key=${config.hypixelApiKey}`)
+    // Fix a weird memory leak with node-fetch where if you don't get the body it leaks
+    req.text()
     // * We use cloudflare age because hypixel is dumb and doesn't align themselves to it so we have to
     let age = Number(req.headers.get('age'))
 
